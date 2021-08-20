@@ -18,7 +18,13 @@ const {Schema} = mongoose
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const User = mongoose.model('User',new Schema({
-  username: String
+  username: {type: String, required: true}
+}))
+
+const Exercise = mongoose.model('Exercise', new Schema({
+  description: {type: String, required: true},
+  duration: {type: Number, required: true},
+  date: {type: Date},
 }))
 
 app.use(cors())
@@ -60,6 +66,39 @@ app.get("/api/users", function (req, res) {
     }
     res.json({data})
   }) 
+})
+
+app.post("/api/users/:_id/exercises", function (req, res) {
+  User.find({ _id: req.params._id }, function(err, user){
+    if(err){
+      res.send(err.message)
+      return
+    }
+    if(!user.length){
+      res.send('Unknown userId')
+      return
+    }
+    let new_exercise = new Exercise({
+      _id: req.params._id,
+      description: req.body.description,
+      duration:req.body.duration,
+      date: req.body.date,
+    })
+    new_exercise.save(function(err, exercise){
+      if(err){
+        const errmsg = Object.values(err.errors)[0].message
+        res.send(errmsg)
+        return
+      }
+      res.json({
+        _id: exercise._id, 
+        username: user.username,
+        date: exercise.date ? new Date(exercise.date).toDateString() : "", 
+        duration: exercise.duration,
+        description: exercise.description,
+      })
+    })
+  })
 })
 
 const listener = app.listen(process.env.PORT || 3000, () => {

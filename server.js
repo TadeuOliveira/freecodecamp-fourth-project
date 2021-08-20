@@ -36,7 +36,6 @@ app.get("/is-mongoose-ok", function (req, res) {
 })
 
 app.post("/api/users", function (req, res) {
-  console.log({request: req.body})
   let newuser = new User({
     username: req.body.username 
   })
@@ -51,6 +50,16 @@ app.post("/api/users", function (req, res) {
     })
     return
   })
+})
+
+app.get("/api/users", function (req, res) {
+  User.find({}, function(err, data){
+    if(err){
+      throw err
+      return
+    }
+    res.json({data})
+  }) 
 })
 
 const listener = app.listen(process.env.PORT || 3000, () => {

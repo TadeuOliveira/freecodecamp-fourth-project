@@ -86,6 +86,7 @@ app.post("/api/users/:_id/exercises", function (req, res) {
       duration:req.body.duration,
     })
     if(req.body.date) new_exercise.date = req.body.date
+    else new_exercise.date = new Date()
     new_exercise.save(function(err, exdata){
       if(err){
         const errmsg = Object.values(err.errors)[0].message

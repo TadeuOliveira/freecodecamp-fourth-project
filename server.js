@@ -95,7 +95,7 @@ app.post("/api/users/:_id/exercises", function (req, res) {
       res.json({
         _id: exdata.userid, 
         username: user.username,
-        date: exdata.date ? new Date(exdata.date).toDateString() : "", 
+        date: exdata.date ? new Date(req.body.date + ' GMT-0300').toDateString() : "", 
         duration: exdata.duration,
         description: exdata.description,
       })

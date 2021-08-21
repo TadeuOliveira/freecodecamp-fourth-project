@@ -71,12 +71,12 @@ app.get("/api/users", function (req, res) {
 })
 
 app.post("/api/users/:_id/exercises", function (req, res) {
-  User.find({ _id: req.params._id }, function(err, user){
+  User.findOne({ _id: req.params._id }, function(err, user){
     if(err){
       res.send(err.message)
       return
     }
-    if(!user.length){
+    if(!user){
       res.send('Unknown userId')
       return
     }

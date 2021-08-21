@@ -85,8 +85,8 @@ app.post("/api/users/:_id/exercises", function (req, res) {
       description: req.body.description,
       duration:req.body.duration,
     })
-    if(req.body.date) new_exercise.date = req.body.date
-    else new_exercise.date = new Date()
+    let isodate = req.body.date ? req.body.date : new Date().toISOString().substring(0,10)
+    new_exercise.date = isodate
     new_exercise.save(function(err, exdata){
       if(err){
         const errmsg = Object.values(err.errors)[0].message
@@ -96,7 +96,7 @@ app.post("/api/users/:_id/exercises", function (req, res) {
       res.json({
         _id: exdata.userid, 
         username: user.username,
-        date: exdata.date ? new Date(req.body.date + ' GMT-0300').toDateString() : "", 
+        date: new Date(isodate + ' GMT-0300').toDateString(),
         duration: exdata.duration,
         description: exdata.description,
       })

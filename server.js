@@ -66,7 +66,7 @@ app.get("/api/users", function (req, res) {
       throw err
       return
     }
-    res.json({data})
+    res.json(data)
   })
 })
 
